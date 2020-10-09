@@ -1,9 +1,3 @@
-.DS_Store
-.eslintrc.js
-.eslintignore
-.profile
-.vscode
-node_modules
 package-lock.json
 rpc/node_modules
 rpc/package-lock.json

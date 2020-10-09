@@ -16,7 +16,10 @@
 
 'use strict';
 
-const carlo = require('carlo');
+const carlo = require(
+	'../../'
+	// 'carlo'
+);
 const os = require('os');
 const path = require('path');
 const si = require('systeminformation');
@@ -30,14 +33,14 @@ async function run() {
           title: 'Systeminfo App',
           width: 1000,
           height: 500,
-          channel: ['canary', 'stable'],
+          channel: ['canary', 'stable', 'chromium'],
           icon: path.join(__dirname, '/app_icon.png'),
           args: process.env.DEV === 'true' ? ['--auto-open-devtools-for-tabs'] : [],
           localDataDir: path.join(os.homedir(), '.carlosysteminfo'),
         });
   } catch(e) {
     // New window is opened in the running instance.
-    console.log('Reusing the running instance');
+    console.log('Reusing the running instance', e);
     return;
   }
   app.on('exit', () => process.exit());
@@ -59,4 +62,4 @@ async function systeminfo() {
   return info;
 }
 
-module.exports = { run };
+run();
