@@ -1,0 +1,102 @@
+<html>
+	<link rel="icon"type="image/png"href="icon.png">
+	<style>
+		body {
+			color: #ddd;
+			display: flex;
+			justify-content: center;
+			/* background-color: #2b2e3b; */
+			opacity: 0;
+			transition: opacity 2s;
+			font-family: Roboto;
+			overflow: hidden;
+		}
+		.content {
+			display: flex;
+			flex-direction: column;
+			flex: auto;
+			justify-content: center;
+		}
+		.heading {
+			font-size: 36px;
+			text-align: center;
+			margin: 25px 0;
+		}
+		#grids {
+			margin-top: 30px;
+			color: #ddd;
+			display: grid;
+			grid-template-columns: 33% 33% 33%;
+			grid-gap: 40px;
+			margin: 25px;
+			overflow: hidden;
+		}
+		.grid-placeholder {
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 10px;
+		}
+		.grid {
+			flex: auto;
+			display: grid;
+			grid-template-columns: 1fr 4fr;
+			grid-gap: 4px;
+		}
+		.value {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.header {
+			font-weight: bold;
+			grid-column: span 2;
+			border-bottom: 1px solid #999;
+		}
+	</style>
+	<title>Systeminfo App</title>
+	<script>
+		async function onload() {
+			const data = await systeminfo();
+			const grids = document.getElementById('grids');
+			const keys = Object.keys(data).sort();
+			for (const type of keys) {
+				const info = data[type];
+				const placeholder = createChild(grids, 'div', 'grid-placeholder');
+				const grid = createChild(placeholder, 'div', 'grid');
+				createChild(grid, 'div', 'header').textContent = type;
+				const infos = Object.keys(info).sort();
+				for (const key of infos) {
+					if (typeof info[key] === 'object')
+						continue;
+					createChild(grid, 'div').textContent = key;
+					const value = createChild(grid, 'div', 'value');
+					value.textContent = info[key];
+				}
+			}
+			const [backend] = await carlo.loadParams();
+			const alexaTop5 = [ 'https://google.com', 'https://youtube.com' ];
+			for (const url of alexaTop5) {
+				const button = document.createElement('button');
+				button.textContent = url;
+				button.onclick = () => backend.showMyWindow(url);
+				document.querySelector('#footer').appendChild(button);
+			}
+			document.body.style.opacity = 1;
+		}
+		function createChild(parent, tag, className) {
+			const elem = document.createElement(tag);
+			if (className)
+			elem.className = className;
+			parent.appendChild(elem);
+			return elem;
+		}
+	</script>
+	<body onload="onload()">
+		<div class="content">
+			<div class="heading">Welcome to Carlo!</div>
+			<div id="grids"></div>
+			<div id="footer"></div>
+		</div>
+	</body>
+</html>

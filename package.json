@@ -15,6 +15,6 @@
 	"license": "Apache-2.0",
 	"dependencies": {
 		"debug": "^4.2.0",
-		"puppeteer-core": "alex2844/puppeteer#main"
+		"puppeteer-core": "^5.3.1"
 	}
 }
