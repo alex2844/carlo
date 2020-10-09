@@ -7,6 +7,8 @@ const os = require('os');
 const path = require('path');
 const si = require('systeminformation');
 
+const cecRemote = require('hdmi-cec').Remote;
+
 class Backend {
 	constructor(app) {
 		this.app_ = app;
@@ -22,7 +24,7 @@ class Backend {
 	}
 	async createWindow_(url) {
 		const window = await this.app_.createWindow({
-			width: 800, height: 600, top: 200, left: 10
+			width: 800, height: 700, top: 200, left: 10
 		});
 		window.on('close', () => this.windows_.delete(url));
 		window.load(url);
@@ -61,5 +63,12 @@ async function systeminfo() {
 	mainWindow.serveFolder(__dirname);
 	await mainWindow.exposeFunction('systeminfo', systeminfo);
 	await mainWindow.load('index.html', rpc.handle(new Backend(app)));
+	let remote = new cecRemote();
+	remote.monitor.client.on('error', err => {
+		mainWindow.evaluate(err_ => setTimeout(() => window.dispatchEvent(new KeyboardEvent('keydown', {
+			code: err_
+		})), 1000), err.toString());
+	})
+	remote.on('keypress', evt => mainWindow.evaluate(evt_ => window.dispatchEvent(new KeyboardEvent('keydown', evt_)), evt));
 	return app;
 })();
