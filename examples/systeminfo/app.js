@@ -45,10 +45,11 @@ async function systeminfo() {
 	let app;
 	try {
 		app = await carlo.launch({
+			args: [ '--devtools-flags' ],
 			bgcolor: '#2b2e3b',
 			title: 'Systeminfo App',
-			width: 1000,
-			height: 600,
+			// width: 1000,
+			// height: 600,
 			// channel: ['canary', 'stable', 'chromium'],
 			icon: path.join(__dirname, '/icon.png'),
 			localDataDir: path.join(os.homedir(), '.carlosysteminfo'),
@@ -57,10 +58,20 @@ async function systeminfo() {
 		console.log('Reusing the running instance', e);
 		return;
 	}
+	console.log({
+		version: await app.browser_.version(),
+		args: app.browser_._process.spawnargs,
+		bin: app.browser_._process.spawnfile,
+		dir: app.options_.localDataDir,
+		cur: __dirname
+	});
 	app.on('exit', () => process.exit());
 	const mainWindow = app.mainWindow();
+	await mainWindow.fullscreen();
 	mainWindow.on('close', () => process.exit());
 	mainWindow.serveFolder(__dirname);
+	// mainWindow.serveOrigin('https://domain');
+	// mainWindow.serveFolder('./');
 	await mainWindow.exposeFunction('systeminfo', systeminfo);
 	await mainWindow.load('index.html', rpc.handle(new Backend(app)));
 	let remote = new cecRemote();

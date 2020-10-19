@@ -7,7 +7,9 @@
 		"configure_1": "curl -L https://github.com/yao-pkg/pkg-binaries/releases/download/node14/fetched-v14.4.0-linux-armv6 --create-dirs -o ~/.pkg-cache/v2.6/fetched-v14.4.0-linux-armv6",
 		"configure_2": "curl -L https://github.com/yao-pkg/pkg-binaries/releases/download/node14/fetched-v14.4.0-linux-arm64 --create-dirs -o ~/.pkg-cache/v2.6/fetched-v14.4.0-linux-arm64",
 		"configure": "npm run configure_1",
-		"build": "pkg package.json --targets node14-linux-armv6",
+		"//build//": "pkg package.json --targets node14-linux-armv6 --no-bytecode",
+		"//build_armv6//": "pkg package.json --targets node8-linux-armv6 --no-bytecode",
+		"build": "pkg package.json --targets node12.2.0-linux-armv7 --no-bytecode",
 		"//bundle//": "pkg package.json --targets node14-linux-armv6,node14-linux-arm64,node14-linux-x64,node14-win-x64 --no-bytecode",
 		"start": "node app.js"
 	},
@@ -16,7 +18,7 @@
 	},
 	"pkg": {
 		"scripts": "*.js",
-		"assets": "www/**/*"
+		"assets": "*.*"
 	},
 	"keywords": [],
 	"author": "The Chromium Authors",
